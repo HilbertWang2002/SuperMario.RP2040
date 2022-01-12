@@ -6,7 +6,7 @@ from st7789 import color565
 from fonts import vga2_8x8 as font1
 from fonts import vga1_16x32 as font2
 import time
-import game_main
+import mario_main
 from my_input import Input
 
 st7789_res = 0

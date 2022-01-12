@@ -4,12 +4,12 @@ from my_text import my_text
 FPS = 24
 refresh_timing = int(1000/FPS)
 
-def middle_state(display, my_input):
+def middle_state(display, my_input,fbuf):
     frame_timing = 1
     frame = 0
     with open('images/mario_normal.bin', 'rb') as f:
         mario_normal = framebuf.FrameBuffer(bytearray(f.read(384)), 12, 16, framebuf.RGB565)
-    fbuf = framebuf.FrameBuffer(bytearray(240 * 180 * 2), 240, 180, framebuf.RGB565)
+    #fbuf = framebuf.FrameBuffer(bytearray(240 * 180 * 2), 240, 180, framebuf.RGB565)
     fbuf.fill(0)
     with open('images/font.bin', 'rb') as f:
         font = f.read(4992)
@@ -47,5 +47,6 @@ def middle_state(display, my_input):
             time.sleep_ms(refresh_timing - frame_timing)
             frame_timing = refresh_timing
         frame+=1
-    
+        if frame==24 :
+            return
     

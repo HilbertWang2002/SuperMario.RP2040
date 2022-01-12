@@ -1,13 +1,14 @@
 import framebuf
 import time
+import gc
 from middle_state import middle_state
 from my_text import my_text
 FPS = 24
 refresh_timing = int(1000/FPS)
 blue=32620
 
-def main_menu(display, my_input):
-    fbuf = framebuf.FrameBuffer(bytearray(240 * 180 * 2), 240, 180, framebuf.RGB565)
+def main_menu(display, my_input,fbuf):
+    #fbuf = framebuf.FrameBuffer(bytearray(240 * 180 * 2), 240, 180, framebuf.RGB565)
     with open('images/main_menu_bg.bin', 'rb') as f:
             for i in range(18):
                 fbuf.blit(framebuf.FrameBuffer(bytearray(f.read(4800)), 240, 10, framebuf.RGB565),0, 10*i)
@@ -65,8 +66,15 @@ def main_menu(display, my_input):
         frame+=1
 
 def main(display, my_input):
-    main_menu(display, my_input)
-    middle_state(display, my_input)
+    print(gc.mem_free())
+    fbuf = framebuf.FrameBuffer(bytearray(240 * 180 * 2), 240, 180, framebuf.RGB565)
+    main_menu(display, my_input,fbuf)
+    print(gc.mem_free())
+    gc.collect()
+    print(gc.mem_free())
+    middle_state(display, my_input,fbuf)
+    gc.collect()
+    print(gc.mem_free())
     
     
     
