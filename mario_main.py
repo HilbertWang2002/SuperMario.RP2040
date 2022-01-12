@@ -1,27 +1,40 @@
 import framebuf
 import time
-FPS = 50
+FPS = 24
 refresh_timing = int(1000/FPS)
 blue=32620
-def color565(red,green=0,blue=0):
-    try:
-        red,green,blue=red
-    except TypeError:
-        pass
-    return (red & 0xf8) << 8 | (green & 0xfc) << 3 | blue >> 3
 def main_menu(display, my_input):
     fbuf = framebuf.FrameBuffer(bytearray(240 * 180 * 2), 240, 180, framebuf.RGB565)
     with open('images/main_menu_bg.bin', 'rb') as f:
             for i in range(18):
                 fbuf.blit(framebuf.FrameBuffer(bytearray(f.read(4800)), 240, 10, framebuf.RGB565),0, 10*i)
     display.blit_buffer(fbuf, 0, 30, 240, 180)
+    with open('images/title_page_mushroom.bin', 'rb') as f:
+        mushroom = framebuf.FrameBuffer(bytearray(f.read(128)), 8, 8, framebuf.RGB565)
+    coins = []
+    with open('images/coin-0-1.bin', 'rb') as f:
+        coins.append(framebuf.FrameBuffer(bytearray(f.read(80)), 5, 8, framebuf.RGB565))
+    with open('images/coin-0-2.bin', 'rb') as f:
+        coins.append(framebuf.FrameBuffer(bytearray(f.read(80)), 5, 8, framebuf.RGB565))
+    with open('images/coin-0-3.bin', 'rb') as f:
+        coins.append(framebuf.FrameBuffer(bytearray(f.read(80)), 5, 8, framebuf.RGB565))
+    with open('images/coin-0-2.bin', 'rb') as f:
+        coins.append(framebuf.FrameBuffer(bytearray(f.read(80)), 5, 8, framebuf.RGB565))
     frame_timing = 1
+    frame = 0
+    print(coins[0].pixel(0,0))
+    player = 1
     while True:
         start_time = time.ticks_ms()
         fbuf.fill_rect(0,0,80,8,blue)
+        fbuf.fill_rect(64,107,8,21,blue)
         fbuf.text(f'FPS:{int(1000/(frame_timing))}', 0, 0)
+        
+        fbuf.blit(mushroom, 64, 94+13*player, 7160)
+        
+        fbuf.blit(coins[frame//4%4], 83, 15, 65535)
         display.blit_buffer(fbuf, 0, 30, 240, 180)
-        start_time = time.ticks_ms()
+        
         
         if(my_input.y()==1):
             player=2
@@ -29,10 +42,13 @@ def main_menu(display, my_input):
             player=1
         if(my_input.A()):
             break
+        
         frame_timing = time.ticks_ms()-start_time
         if(frame_timing<refresh_timing):
             time.sleep_ms(refresh_timing - frame_timing)
             frame_timing = refresh_timing
+        frame+=1
+
 def main(display, my_input):
     main_menu(display, my_input)
     
