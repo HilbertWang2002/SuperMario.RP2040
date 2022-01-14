@@ -38,7 +38,9 @@ font_map = {'0': 0,
             '-': 36,
             '*': 37,
             '!': 38}
-def my_text(buf, text, x, y, font):
+with open('images/font.bin', 'rb') as f:
+        font = f.read(4992)
+def my_text(buf, text, x, y):
     count = 0
     for i in text:
         if i != ' ':
