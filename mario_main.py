@@ -2,6 +2,7 @@ import framebuf
 import time
 import gc
 from middle_state import middle_state
+from level1 import level1
 from my_text import my_text
 from machine import Timer
 FPS = 24
@@ -9,8 +10,8 @@ refresh_timing = int(1000/FPS)
 blue=32620
 
 def main_menu(display, my_input,fbuf):
-    from musics import mario_song
-    bgm_timer = Timer(period=40, callback=lambda t:mario_song.tick())
+    #from musics import mario_song
+    #bgm_timer = Timer(period=40, callback=lambda t:mario_song.tick())
     print(gc.mem_free())
     #fbuf = framebuf.FrameBuffer(bytearray(240 * 180 * 2), 240, 180, framebuf.RGB565)
     with open('images/main_menu_bg.bin', 'rb') as f:
@@ -59,8 +60,8 @@ def main_menu(display, my_input,fbuf):
         elif(my_input.y()==-1):
             player=1
         if(my_input.A()):
-            mario_song.stop()
-            bgm_timer.deinit()
+            #mario_song.stop()
+            #bgm_timer.deinit()
             return
         
         frame_timing = time.ticks_ms()-start_time
@@ -79,6 +80,10 @@ def main(display, my_input):
     middle_state(display, my_input,fbuf)
     gc.collect()
     print(gc.mem_free())
+    level1(display, my_input,fbuf)
+    gc.collect()
+    print(gc.mem_free())
+    
     
     
     
